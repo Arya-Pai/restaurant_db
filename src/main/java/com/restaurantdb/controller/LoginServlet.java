@@ -1,30 +1,30 @@
 package com.restaurantdb.controller;
 
+import java.io.IOException;
+
+import com.restaurantdb.dao.EmployeeDAO;
+import com.restaurantdb.model.Employee;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-
-import com.restaurantdb.dao.EmployeeDAO;
-import com.restaurantdb.model.Employee;
-
 @WebServlet("/LoginServlet")
+
+
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
    protected void doPost(HttpServletRequest req,HttpServletResponse res) throws ServletException,IOException{
 	   String id=req.getParameter("emp_id");
 	   String password=req.getParameter("emp_password");
-	   EmployeeDAO dao=new EmployeeDAO();
 	   HttpSession session=req.getSession();
+	   EmployeeDAO dao=new EmployeeDAO();
 	   try {
-		   boolean present=dao.validate(id, password);
-		   if(present) {
-			   Employee emp = dao.getEmployee(id);
+		   Employee emp=dao.validate(id, password);
+		   if(emp!=null) {
 			   if(emp.isActive()) {
 				   session.setAttribute("emp_id", emp.getId());
 				   session.setAttribute("emp_name", emp.getEmp_name());
