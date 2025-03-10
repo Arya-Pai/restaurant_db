@@ -36,5 +36,10 @@ public class EmployeeDAO {
 		}
 		return null;  
 	}
+
+//	public boolean addEmployee(String name, String phone, String password, String role_name) {
+//		
+//		return rows>0;
+//	}
 }
 

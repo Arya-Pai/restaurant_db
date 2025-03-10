@@ -10,6 +10,16 @@ public class Employee {
 	private int role_id;
 	
 	
+	public Employee(String name, String phone, String password, String role_name) {
+		this.username=name;
+		this.password=password;
+		this.phone=phone;
+		this.role_name=role_name;
+	}
+	public Employee() {
+		
+	}
+
 	public int getId() {
 		return id;
 	}
