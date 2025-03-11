@@ -36,10 +36,102 @@ public class EmployeeDAO {
 		}
 		return null;  
 	}
+	private int generateEmployeeID() throws ClassNotFoundException {
+        int newEmpID = 1000; // Default starting ID
 
-//	public boolean addEmployee(String name, String phone, String password, String role_name) {
-//		
-//		return rows>0;
-//	}
+        String query = "SELECT MAX(employee_id) FROM employees"; // Get the last employee ID
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                int lastEmpID = rs.getInt(1); // Get the highest emp_id
+                if (lastEmpID >= 1000) {
+                    newEmpID = lastEmpID + 1; // Increment
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return newEmpID;
+    }
+	
+	private int getRoleID(String rolename) throws ClassNotFoundException, SQLException {
+		String sql="SELECT role_id FROM roles WHERE role_name =?";
+		try(Connection con=DBUtil.getConnection();
+				PreparedStatement st=con.prepareStatement(sql)){
+				st.setString(1, rolename);
+				ResultSet rs=st.executeQuery();
+				if(rs.next()) {
+					return rs.getInt("role_id");
+				}
+		}catch(Exception e) {
+			e.printStackTrace();
+		
+		}
+		return -1;
+	}
+	
+	
+	public boolean addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+		int roleId=getRoleID(employee.getRoleName());
+		if(roleId==-1) {
+			System.out.println("role does not exist ,employee not added");
+			return false;
+			
+		}
+		int empId=generateEmployeeID();
+		String sql="INSERT INTO employees(employee_id,name,phone,role_id,password) VALUES(?,?,?,?,?)";
+		try(Connection con=DBUtil.getConnection();
+				PreparedStatement st=con.prepareStatement(sql)){
+			st.setInt(1, empId);
+			st.setString(2, employee.getEmp_name());
+			st.setString(3, employee.getPhone());
+			st.setInt(4, roleId);
+			st.setString(5,employee.getPassword() );
+			int rows=st.executeUpdate();
+			return rows>0;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	public int createRole(String roleName) throws ClassNotFoundException {
+        String insertRoleSql = "INSERT INTO roles (role_name) VALUES (?)";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement insertStmt = conn.prepareStatement(insertRoleSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            insertStmt.setString(1, roleName);
+            int rowsInserted = insertStmt.executeUpdate();
+
+            if (rowsInserted > 0) {
+                ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return new role ID
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Error case
+    }
+	public boolean checkRoleExists(String roleName) throws ClassNotFoundException {
+        String query = "SELECT role_id FROM roles WHERE role_name = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, roleName);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // If role exists, return true
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
