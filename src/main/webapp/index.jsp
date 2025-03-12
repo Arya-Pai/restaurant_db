@@ -35,7 +35,7 @@
     <nav id="navbar">
         <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
         <div class="nav-items"><a href="add_employee.jsp">Add Employee</a></div>
-        <div class="nav-items"><a href="add_menu_item.jsp">Add Menu Item</a></div>
+        <div class="nav-items"><a href="add_menu.jsp">Add Menu Item</a></div>
         <div class="nav-items"><a href="logout.jsp">Logout</a></div>  <!-- Added Logout -->
     </nav>
 <% } else { %>

@@ -10,12 +10,18 @@
     Employee pendingEmployee = (Employee) sessionObj.getAttribute("pendingEmployee");
 
     if (successMessage != null) { %>
-        <div class="alert alert-success"><%= successMessage %></div>
+    <script>
+    alert("<%= successMessage %>");
+	</script>
+
 <%  sessionObj.removeAttribute("successMessage");
     }
 
     if (errorMessage != null) { %>
-        <div class="alert alert-danger"><%= errorMessage %></div>
+    <script>
+    alert("<%= errorMessage %>");
+	</script>
+
 <%  sessionObj.removeAttribute("errorMessage");
     }
 %>
@@ -23,7 +29,7 @@
 <h2>Add Employee</h2>
 <form action="AddEmployeeServlet" method="post">
     Name: <input type="text" name="name" required><br>
-    Phone: <input type="text" name="phone" required><br>
+    Phone: <input type="tel" name="phone" required><br>
     Password: <input type="password" name="password" required><br>
     Role: <input type="text" name="role_name" required><br>
     <button type="submit">Add Employee</button>
@@ -39,7 +45,7 @@
                 <input type="hidden" name="password" value="<%= pendingEmployee.getPassword() %>">
                 <input type="hidden" name="role_name" value="<%= pendingEmployee.getRoleName() %>">
                 <input type="hidden" name="confirmCreateRole" value="yes">
-                <button type="submit">Yes, Create Role & Add Employee</button>
+                <button type="submit">Yes, Create Role and Add Employee</button>
             </form>
             <button onclick="closeModal()">No, Cancel</button>
         </div>
