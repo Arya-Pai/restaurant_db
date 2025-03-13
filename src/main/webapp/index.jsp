@@ -27,7 +27,7 @@
         <li><a href="take_order.jsp">Take Order</a></li>
         <li><a href="view_orders.jsp">View Orders</a></li>
         <li><a href="menu.jsp">Menu</a></li>
-        <li><a href="logout.jsp">Logout</a></li>  <!-- Added Logout -->
+        <li><a href="logout.jsp">Logout</a></li>  
     </ul>
 <% } else if ("admin".equals(role)) { %>
     <h1>Admin Dashboard</h1>
@@ -36,7 +36,17 @@
         <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
         <div class="nav-items"><a href="add_employee.jsp">Add Employee</a></div>
         <div class="nav-items"><a href="add_menu.jsp">Add Menu Item</a></div>
-        <div class="nav-items"><a href="logout.jsp">Logout</a></div>  <!-- Added Logout -->
+        <div class="nav-items"><a href="logout.jsp">Logout</a></div> 
+    </nav>
+<% } else if ("Manager".equals(role)) { %>
+    <h1>Manager Dashboard</h1>
+    <h3>Welcome, <%= empname %></h3>
+    <nav id="navbar">
+        <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
+        <li><a href="take_order.jsp">Take Order</a></li>
+        <li><a href="view_orders.jsp">View Orders</a></li>
+        <li><a href="menu.jsp">Menu</a></li>
+        <li><a href="logout.jsp">Logout</a></li>
     </nav>
 <% } else { %>
     <h1>Unauthorized Access</h1>

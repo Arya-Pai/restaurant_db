@@ -16,10 +16,21 @@ public class Menu {
 		this.price=price;
 		this.type=type;
 	}
-	public Menu() {
+	public Menu(int item_id, String item_name, int categoryId, double price, String status) {
+		this.item_id=item_id;
+		this.item_name=item_name;
+		this.category_id=categoryId;
+		this.price=String.valueOf(price);
+		this.status=status;
 		
 	}
 
+	public Menu(String name, double price, String type) {
+		this.item_name=name;
+		this.price=String.valueOf(price);
+		this.type=type;
+		
+	}
 	public int getItem_Id() {
 		return item_id;
 	}

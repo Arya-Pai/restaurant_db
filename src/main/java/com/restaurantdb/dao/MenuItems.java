@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.*;
 import com.restaurantdb.model.Menu;
 import com.restaurantdb.util.DBUtil;
 
@@ -117,6 +117,31 @@ public class MenuItems {
             e.printStackTrace();
         }
         return newItemID;
+    }
+    public static List<Menu> getMenuItemsByCategory(int categoryId) throws SQLException, ClassNotFoundException {
+    	List<Menu> menuItems = new ArrayList<>();
+        String sql = "SELECT item_id, item_name, price, status FROM MENU_ITEMS WHERE category_id = ? AND status = 'Available'";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Menu item = new Menu(
+                    rs.getInt("item_id"),
+                    rs.getString("item_name"),
+                    categoryId,
+                    rs.getDouble("price"),
+                    rs.getString("status")
+                );
+                menuItems.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return menuItems;
     }
 }
 
