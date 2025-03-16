@@ -16,7 +16,7 @@ public class MenuItems {
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, categoryName);
             ResultSet rs = stmt.executeQuery();
-            return rs.next(); // If category exists, return true
+            return rs.next(); 
         } catch (SQLException e) {
             e.printStackTrace();
         }

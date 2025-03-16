@@ -5,13 +5,17 @@
     String empname = (String) session.getAttribute("emp_name");
     String role = (String) session.getAttribute("role_name");
     System.out.println(role);
+    Integer employeeId = (Integer) session.getAttribute("emp_id");
+    String successMessage = (String) session.getAttribute("successMessage");
+    String errorMessage = (String) session.getAttribute("errorMessage");
 
-    // Redirect to login page if not logged in
+  
     if (empname == null || role == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +23,28 @@
     <title>Dashboard</title>
 </head>
 <body>
+<%
+    if (successMessage != null) { %>
+    <script>
+    alert("<%= successMessage %>");
+	</script>
 
+<%  session.removeAttribute("successMessage");
+    }
+
+    if (errorMessage != null) { %>
+    <script>
+    alert("<%= errorMessage %>");
+	</script>
+
+<%  session.removeAttribute("errorMessage");
+    }
+%>
 <% if ("Waiter".equals(role)) { %>
     <h1>Waiter Dashboard</h1>
     <h3>Welcome, <%= empname %></h3>
     <ul>
-        <li><a href="take_order.jsp">Take Order</a></li>
+        <li><a href="table.jsp">Take Order</a></li>
         <li><a href="view_orders.jsp">View Orders</a></li>
         <li><a href="menu.jsp">Menu</a></li>
         <li><a href="logout.jsp">Logout</a></li>  
@@ -36,6 +56,8 @@
         <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
         <div class="nav-items"><a href="add_employee.jsp">Add Employee</a></div>
         <div class="nav-items"><a href="add_menu.jsp">Add Menu Item</a></div>
+        <div class="nav-items"><a href="add_table.jsp">Add Table</a></div>
+        
         <div class="nav-items"><a href="logout.jsp">Logout</a></div> 
     </nav>
 <% } else if ("Manager".equals(role)) { %>
@@ -43,7 +65,7 @@
     <h3>Welcome, <%= empname %></h3>
     <nav id="navbar">
         <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
-        <li><a href="take_order.jsp">Take Order</a></li>
+        <li><a href="table.jsp">Take Order</a></li>
         <li><a href="view_orders.jsp">View Orders</a></li>
         <li><a href="menu.jsp">Menu</a></li>
         <li><a href="logout.jsp">Logout</a></li>

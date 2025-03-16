@@ -34,19 +34,10 @@
 </head>
 <body>
 	<h2>Add Menu Item</h2>
-<form action="AddMenuServlet" method="post">
-   Item Name: <input type="text" name="item_name" required><br>
-   Category Name: <input type="text" name="category_name" required><br>
-    Price: <input type="number" name="price" required><br>
-    <label for="type">Select Type:</label>
-    <select id="type" name="type" required>
-        <option value="" disabled selected>Choose a type</option>
-        <option value="veg">Vegetarian</option>
-        <option value="nonveg">Non-Vegetarian</option>
-        <option value="vegan">Vegan</option>
-    </select>
-   
-    <button type="submit">Add</button>
+<form method="post" action="AddTableServlet">
+    <label>Enter Total Tables:</label>
+    <input type="number" name="totalTables" required min="1">
+    <button type="submit">Add Tables</button>
 </form>
 
 <% if (newRoleMessage != null) { %>
