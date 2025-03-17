@@ -12,7 +12,6 @@ import com.restaurantdb.model.Table;
 
 public class TableDAO {
 	public static List<Table> getAvailableTables() throws SQLException, ClassNotFoundException {
-		System.out.println("🔄 getAvailableTables() called...");  // Debugging
         List<Table> tables = new ArrayList<>();
 
         try (Connection con = DBUtil.getConnection();
@@ -27,15 +26,12 @@ public class TableDAO {
                 table.setStatus(rs.getString("status"));
                 tables.add(table);
 
-                System.out.println("✅ Table Fetched: " + table.getTableId());  // Debug print
+        
             }
 
         } catch (SQLException e) {
-            System.out.println("❌ SQLException occurred: " + e.getMessage());
-            throw e;
+            e.printStackTrace();
         }
-
-        System.out.println("✅ Total Tables: " + tables.size());  // Debug print
         return tables;
 	}
 
@@ -72,17 +68,18 @@ public class TableDAO {
         ps.close();
         con.close();
     }
-    public static void assignTable(int tableId, int customerId) throws SQLException, ClassNotFoundException {
+    public static boolean assignTable(int tableId, int customerId) throws SQLException, ClassNotFoundException {
         Connection con = DBUtil.getConnection();
         String query = "UPDATE TABLES SET status = 'Occupied', customer_id = ? WHERE table_id = ?";
 
         PreparedStatement ps = con.prepareStatement(query);
         ps.setInt(1, customerId);
         ps.setInt(2, tableId);
-        ps.executeUpdate();
+       boolean status= ps.execute();
 
         ps.close();
         con.close();
+        return status;
     }
     public static int getHighestTableNumber() throws SQLException, ClassNotFoundException {
         Connection con = DBUtil.getConnection();

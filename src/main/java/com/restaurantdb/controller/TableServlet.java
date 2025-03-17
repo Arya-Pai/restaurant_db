@@ -32,13 +32,11 @@ public class TableServlet extends HttpServlet {
 		try {
 			List<Table> availableTables = dao.getAvailableTables();
 			
-			System.out.println("✅ Tables fetched: " + availableTables.size()); 
-			req.setAttribute("tables", availableTables);
+			userSession.setAttribute("tables", availableTables);
 			
-			req.getRequestDispatcher("table.jsp").forward(req, res);
+			res.sendRedirect("table.jsp");
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			System.out.println("❌ Exception occurred: " + e.getMessage());
 			req.setAttribute("errorMessage", "Error fetching tables. Please try again later.");
 			req.getRequestDispatcher("error.jsp").forward(req, res);
 		}
