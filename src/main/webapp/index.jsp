@@ -45,7 +45,7 @@
     <h3>Welcome, <%= empname %></h3>
     <ul>
         <li><a href="table.jsp">Take Order</a></li>
-        <li><a href="view_orders.jsp">View Orders</a></li>
+        <li><a href="editOrder.jsp">View and Edit Orders</a></li>
         <li><a href="menu.jsp">Menu</a></li>
         <li><a href="logout.jsp">Logout</a></li>  
     </ul>
@@ -66,9 +66,21 @@
     <nav id="navbar">
         <div class="nav-items"><a href="total_sales.jsp">Total Sales</a></div>
         <li><a href="table.jsp">Take Order</a></li>
-        <li><a href="view_orders.jsp">View Orders</a></li>
+    
         <li><a href="menu.jsp">Menu</a></li>
+        
+            <li><a href="editOrder.jsp">View and Edit Orders</a></li>
         <li><a href="logout.jsp">Logout</a></li>
+                    <li><a href="editOrder.jsp">View and Edit Orders</a></li>
+    </nav>
+    <% } else if ("Cashier".equals(role)) { %>
+    <h1>Cashier Dashboard</h1>
+    <h3>Welcome, <%= empname %></h3>
+    <nav id="navbar">
+        <div class="nav-items"><a href="todaySales.jsp">Todays' Sales</a></div>
+        <div class="nav-items"><a href="payment.jsp">Make Payment</a></div>
+        
+        
     </nav>
 <% } else { %>
     <h1>Unauthorized Access</h1>

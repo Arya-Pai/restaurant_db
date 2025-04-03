@@ -14,7 +14,7 @@
     String error = (String) userSession.getAttribute("errorMessage");
     String customerNotFound = (String) userSession.getAttribute("customerNotFound");
     String phoneNumber = (String) userSession.getAttribute("phone");
-    String tableId = (String) userSession.getAttribute("table_id");
+    Integer tableId = (Integer) userSession.getAttribute("tableId");
 %>
 
 <!DOCTYPE html>
@@ -79,7 +79,7 @@
     <div id="popup" class="popup">
         <h3>Enter Customer Phone Number</h3>
         <form action="CheckCustomerServlet" method="post">
-            <input type="hidden" name="table_id" id="table_id">
+            <input type="hidden" name="table_number" id="table_id">
             <input type="text" name="phone" id="phone_number" placeholder="Enter Phone Number" required>
             <button type="submit">Check</button>
             <button type="button" onclick="closePopup()">Cancel</button>
@@ -95,7 +95,7 @@
             <input type="text" name="name" required>
             <button type="submit">Assign Table</button>
         </form>
-    <% } %>
+    <% }%>
 </body>
 </html>
 

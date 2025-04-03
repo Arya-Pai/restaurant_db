@@ -41,10 +41,20 @@ public class AssignTableServlet extends HttpServlet {
 		try {
 			boolean created=dao.createCustomer(name, phone);
 			if(created) {
+				
 				Customer cust=dao.getCustomer(phone);
-				session.setAttribute("table_id", table_id);
-				session.setAttribute("customerInfor", cust);
-				response.sendRedirect("menu.jsp");
+				boolean status= TableDAO.assignTable(cust.getId(), table_id);
+				if(status) {
+					System.out.println(status);
+					session.setAttribute("table_id", table_id);
+					session.setAttribute("customerInfor", cust);
+					response.sendRedirect("menu.jsp");
+				}else {
+					session.setAttribute("errorMessage","Assigning failed");
+					response.sendRedirect("table.jsp");
+					return;
+				}
+				
 				
 			}
 		} catch (ClassNotFoundException | SQLException e) {

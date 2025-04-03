@@ -21,6 +21,7 @@
 
 </head>
 <body>
+
 <form method="post" action="AddTableServlet">
 	<label>Enter Total Tables Capacity:</label>
     <input type="number" name="table_capacity" required min="2">
