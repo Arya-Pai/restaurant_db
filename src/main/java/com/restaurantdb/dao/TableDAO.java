@@ -75,7 +75,7 @@ public class TableDAO {
         ps.setInt(1, customerId);
         ps.setInt(2, tableId);
         int updated = ps.executeUpdate();
-
+        System.out.println(updated);
         ps.close();
         con.close();
         return updated > 0;
@@ -209,7 +209,28 @@ public class TableDAO {
         }
         return -1;
     }
+    public List<Table> getAllTables() throws Exception {
+        List<Table> tables = new ArrayList<>();
+        String query = "SELECT * FROM tables";
 
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Table table = new Table();
+                table.setTableId(rs.getInt("table_id"));
+                table.setTableNumber(rs.getInt("table_number"));
+                table.setCapacity(rs.getInt("capacity"));
+                tables.add(table);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Error fetching tables from the database", e);
+        }
+
+        return tables;
+    }
     // Method to generate a new table ID
     
 

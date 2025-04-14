@@ -24,7 +24,7 @@ public class AddMenuServlet extends HttpServlet {
 		 	String item_name = req.getParameter("item_name");
 	        String category_name = req.getParameter("category_name");
 	        String price = req.getParameter("price");
-	        String type=req.getParameter("type");
+	        String type="Veg";
 	        String confirmCreateCategory = req.getParameter("confirmCreateCategory");
 	        HttpSession session = req.getSession();
 

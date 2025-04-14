@@ -1,8 +1,9 @@
 package com.restaurantdb.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import com.restaurantdb.dao.BillDAO;
+import com.restaurantdb.dao.OrderDAO;
+import com.restaurantdb.dao.OrderItemsDAO;
+import com.restaurantdb.model.OrderItem;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,48 +12,48 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import com.restaurantdb.model.OrderItem;
-import com.restaurantdb.dao.OrderDAO;
-import com.restaurantdb.model.Order;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/OrderServlet")
 public class OrderServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private OrderDAO orderDAO;
-
-    public void init() {
-        orderDAO = new OrderDAO();
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
         HttpSession session = request.getSession();
         List<OrderItem> orderList = (List<OrderItem>) session.getAttribute("orderList");
         Integer employeeId = (Integer) session.getAttribute("emp_id");
-        Integer orderId = (Integer) session.getAttribute("orderId");
+        Integer tableId=(Integer) session.getAttribute("table_id");
+        // Check if employeeId is null
+        if (employeeId == null) {
+            response.sendRedirect("menu.jsp?errorMessage=Employee ID is missing.");
+            return;
+        }
 
-        if (orderList != null && !orderList.isEmpty() && employeeId != null && orderId != null) {
-            try {
-                // Create a new order object
-                Order order = new Order();
-                order.setOrderId(orderId);
-                order.setEmployeeId(employeeId);
-                order.setOrderItems(orderList);
+        try {
+            if ("confirm".equals(action)) {
+                if (orderList == null || orderList.isEmpty()) {
+                    response.sendRedirect("menu.jsp?errorMessage=Order list is empty.");
+                    return;
+                }
 
-                // Save the order to the database
-                orderDAO.confirmOrder(order);
+                OrderDAO orderDAO = new OrderDAO();
+                OrderItemsDAO orderItemsDAO = new OrderItemsDAO();
+//                BillDAO.addBill(tableId);
+                int orderId = orderDAO.createOrder(tableId,employeeId);
 
-                // Clear the session attributes
+                for (OrderItem item : orderList) {
+                    orderItemsDAO.addOrderItem(orderId, item.getItemId(), item.getQuantity(), item.getPrice());
+                }
+
                 session.removeAttribute("orderList");
-                session.removeAttribute("orderId");
-
-                session.setAttribute("sucess", "Your order "+orderId+" has been plaed successfully"); 
-                response.sendRedirect("editOrder.jsp");
-            } catch (SQLException | ClassNotFoundException e) {
-                throw new ServletException(e);
+                response.sendRedirect("menu.jsp?successMessage=Order confirmed successfully.");
+            } else {
+                response.sendRedirect("menu.jsp?errorMessage=Invalid action.");
             }
-        } else {
-            response.sendRedirect("menu.jsp");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            response.sendRedirect("menu.jsp?errorMessage=" + e.getMessage());
         }
     }
 }

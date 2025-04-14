@@ -8,18 +8,21 @@ import com.restaurantdb.model.Bill;
 import com.restaurantdb.util.DBUtil;
 
 public class BillDAO {
-    public void addBill(Bill bill) throws SQLException, ClassNotFoundException {
-        String query = "INSERT INTO BILLS (table_id, total_amount, bill_status) VALUES (?, ?, ?)";
+    public static void addBill(int table_id) throws SQLException, ClassNotFoundException {
+        String query = "INSERT INTO BILLS (bill_id,table_id, bill_status) VALUES (?,?, ?)";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement pst = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            pst.setInt(1, bill.getTableId());
-            pst.setDouble(2, bill.getTotalAmount());
-            pst.setString(3, bill.getBillStatus());
+        	int bill_id=generateBillID();
+        	pst.setInt(1, bill_id);
+            pst.setInt(2, table_id);
+    
+            pst.setString(3, "Pending");
             pst.executeUpdate();
 
             ResultSet rs = pst.getGeneratedKeys();
             if (rs.next()) {
-                bill.setBillId(rs.getInt(1));
+                Bill bill = null;
+				bill.setBillId(rs.getInt(1));
             }
         }
     }
@@ -107,6 +110,25 @@ public class BillDAO {
             pst.setInt(2, billId);
             pst.executeUpdate();
         }
+    }
+    public static int generateBillID() throws ClassNotFoundException {
+    	int bill=1;
+    	String query = "SELECT MAX(bill_id) FROM bills";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                int lastbillID = rs.getInt(1);
+                if (lastbillID >= 1) {
+                    bill= lastbillID + 1;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	
+    	return bill;
     }
 }
 

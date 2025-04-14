@@ -18,6 +18,23 @@ public class OrderItem {
         this.price = price;
         this.quantity = quantity;
     }
+    public OrderItem(int orderId, int itemId, int quantity, double price, String status) {
+        this.orderId = orderId;
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.price = price;
+        this.status = status;
+    }
+
+    // Constructor with itemName (Used for fetching order details)
+    public OrderItem(int orderId, int itemId, int quantity, double price, String status, String itemName) {
+        this.orderId = orderId;
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.price = price;
+        this.status = status;
+        this.itemName = itemName;
+    }
 
     public OrderItem(Integer orderId, int itemId, int quantity) {
 		this.orderId=orderId;
@@ -79,5 +96,12 @@ public class OrderItem {
 		this.status=status;
 		
 	}
+	
+	public OrderItem(int itemId, String itemName, int quantity, double price) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }
 

@@ -39,7 +39,9 @@ public class AssignTableServlet extends HttpServlet {
             return;
         }
 		try {
+			System.out.println("Assign Customer" + name);
 			boolean created=dao.createCustomer(name, phone);
+			System.out.println(created);
 			if(created) {
 				
 				Customer cust=dao.getCustomer(phone);

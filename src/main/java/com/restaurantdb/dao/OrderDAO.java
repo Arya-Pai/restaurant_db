@@ -62,11 +62,11 @@ public class OrderDAO {
 
     public List<Order> getOngoingOrdersByTableId(int tableId) throws SQLException, ClassNotFoundException {
         List<Order> orders = new ArrayList<>();
-        String query = "SELECT o.order_id, o.bill_id, o.order_time, o.employee_id " +
+        String query = "SELECT DISTINCT o.order_id, o.bill_id, o.order_time, o.employee_id  " +
                        "FROM orders o " +
                        "JOIN bills b ON o.bill_id = b.bill_id " +
-                       "JOIN orders_items oi ON o.order_id = oi.order_id " +
-                       "WHERE b.table_id = ? AND oi.status = 'Pending'";
+                       "LEFT JOIN orders_items oi ON o.order_id = oi.order_id  " +
+                       "WHERE b.table_id = ? AND (oi.status = 'Pending' OR o.total_amount >= 0.0 OR oi.order_id IS NULL)";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement pst = con.prepareStatement(query)) {
             pst.setInt(1, tableId);
@@ -129,17 +129,29 @@ public class OrderDAO {
     public int createOrder(int tableId, int employeeId) throws SQLException, ClassNotFoundException {
         int orderId = -1;
         int billId = -1;
-        
+        String validateTableQuery = "SELECT table_id FROM tables WHERE table_id = ?";
         // Check if a bill already exists for the given tableId
-        String checkBillQuery = "SELECT bill_id FROM bills WHERE table_id = ?";
-        String billQuery = "INSERT INTO bills (table_id) VALUES (?)";
+        String checkBillQuery = "SELECT bill_id FROM bills WHERE table_id = ? AND bill_status='Pending'";
+        String billQuery = "INSERT INTO bills (table_id,bill_status) VALUES (?,'Pending')";
         String orderQuery = "INSERT INTO orders (bill_id, employee_id, order_time) VALUES (?,  ?, CURRENT_TIMESTAMP)";
+        
+        
+        String updateBillAmountQuery = "UPDATE bills SET total_amount = ("
+                + "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE bill_id = ?) "
+                + "WHERE bill_id = ?";
+       
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement pstCheckBill = con.prepareStatement(checkBillQuery);
              PreparedStatement pstBill = con.prepareStatement(billQuery, PreparedStatement.RETURN_GENERATED_KEYS);
              PreparedStatement pstOrder = con.prepareStatement(orderQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
+        	 PreparedStatement pstValidateTable = con.prepareStatement(validateTableQuery);
+        	 PreparedStatement pstUpdateBillAmount = con.prepareStatement(updateBillAmountQuery);
+             pstValidateTable.setInt(1, tableId);
+             ResultSet rsValidateTable = pstValidateTable.executeQuery();
+             if (!rsValidateTable.next()) {
+                 throw new SQLException("Invalid table_id: " + tableId);
+             }
             // Check for existing bill
             pstCheckBill.setInt(1, tableId);
             ResultSet rsCheckBill = pstCheckBill.executeQuery();
@@ -161,11 +173,15 @@ public class OrderDAO {
       
             pstOrder.setInt(2, employeeId);
             pstOrder.executeUpdate();
+            
 
             ResultSet rsOrder = pstOrder.getGeneratedKeys();
             if (rsOrder.next()) {
                 orderId = rsOrder.getInt(1);
             }
+            pstUpdateBillAmount.setInt(1, billId);
+            pstUpdateBillAmount.setInt(2, billId);
+            pstUpdateBillAmount.executeUpdate();
         }
         return orderId;
     }
@@ -179,4 +195,20 @@ public class OrderDAO {
         preparedStatement.executeUpdate();
         connection.close();
     }
+    public int createOrder(int employeeId) throws SQLException, ClassNotFoundException {
+        String query = "INSERT INTO orders (employee_id) VALUES (?)";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement pst = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pst.setInt(1, employeeId);
+            pst.executeUpdate();
+
+            try (ResultSet rs = pst.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Return the generated order ID
+                }
+            }
+        }
+        return 0; // Indicate failure if no ID was generated
+    }
+  
 }

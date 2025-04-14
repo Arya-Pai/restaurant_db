@@ -28,6 +28,7 @@ public class MenuItems {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement st = conn.prepareStatement(insertCategorySql, PreparedStatement.RETURN_GENERATED_KEYS)) {
         	int category_id=generateCategoryID();
+        	System.out.println("Category");
         	st.setInt(1, category_id);
         	st.setString(2, categoryName);
         	st.setString(3, type);
@@ -143,5 +144,60 @@ public class MenuItems {
         }
         return menuItems;
     }
+    public static int getPriceItemById(int itemId) throws SQLException, ClassNotFoundException {
+    	int price =0;
+        String query = "SELECT price FROM menu_items WHERE item_id = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setInt(1, itemId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    price=rs.getInt("price");
+                    return price;
+                } else {
+                    throw new SQLException("No menu item found with ID: " + itemId);
+                }
+            }
+        }
+    }
+    public boolean updateMenuStatus(int itemId, boolean availableStatus) throws ClassNotFoundException, SQLException {
+        String sql = "UPDATE menu SET available = ? WHERE item_id = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            st.setBoolean(1, availableStatus);
+            st.setInt(2, itemId);
+            int rows = st.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Menu> getAllMenuItems() throws ClassNotFoundException, SQLException {
+        List<Menu> menuItems = new ArrayList<>();
+        String sql = "SELECT item_id, item_name, category_name, price status FROM menu";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+
+            while (rs.next()) {
+                Menu menu = new Menu();
+                menu.setItem_ID(rs.getInt("item_id"));
+                menu.setItem_name(rs.getString("item_name"));
+                menu.setCategory_Name(rs.getString("category_name"));
+                Double price=(rs.getDouble("price"));
+                String price1=price+" ";
+                menu.setPrice(price1);
+                menu.setStatus(rs.getString("status"));
+                menuItems.add(menu);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return menuItems;
+    }
+    
 }
 

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.restaurantdb.model.Employee;
 import com.restaurantdb.util.DBUtil;
@@ -132,6 +134,43 @@ public class EmployeeDAO {
             e.printStackTrace();
         }
         return false;
+    }
+	public static List<Employee> getAllEmployees() throws ClassNotFoundException, SQLException {
+        List<Employee> employees = new ArrayList<>();
+        String sql = "SELECT e.employee_id, e.name, e.phone, e.is_active, r.role_name " +
+                     "FROM EMPLOYEES e " +
+                     "JOIN ROLES r ON e.role_id = r.role_id";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+
+            while (rs.next()) {
+                Employee emp = new Employee();
+                emp.setEmpID(rs.getInt("employee_id"));
+                emp.setEmp_name(rs.getString("name"));
+                emp.setPhone(rs.getString("phone"));
+                emp.setActive(rs.getBoolean("is_active"));
+                emp.setRole(rs.getString("role_name"));
+                employees.add(emp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employees;
+    }
+	public static boolean updateEmployeeStatus(int employeeId, boolean activeStatus) throws ClassNotFoundException, SQLException {
+        String sql = "UPDATE employees SET is_active = ? WHERE employee_id = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            st.setBoolean(1, activeStatus);
+            st.setInt(2, employeeId);
+            int rows = st.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 

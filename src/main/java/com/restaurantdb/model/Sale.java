@@ -1,5 +1,10 @@
 package com.restaurantdb.model;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
+
+
 public class Sale {
     private int orderId;
     private int tableNumber;
@@ -8,6 +13,9 @@ public class Sale {
     private int paymentId;
     private int billId;
     private String paymentMode;
+	private double amount;
+	 private Timestamp orderTime;
+	 private Date orderDate;
 
     // Getters and Setters
 
@@ -66,4 +74,28 @@ public class Sale {
     public void setPaymentMode(String paymentMode) {
         this.paymentMode = paymentMode;
     }
+
+	public void setAmount(double amount) {
+		// TODO Auto-generated method stub
+		this.amount=amount;
+	}
+	public double getAmount() {
+		return amount;
+	}
+	
+	 public Timestamp getPaymentTime() {
+	        return orderTime;
+	    }
+
+	    public void setPaymentTime(Timestamp timestamp) {
+	        this.orderTime = timestamp;
+	    }
+
+	    public Date getOrderDate() {
+	        return orderDate;
+	    }
+
+	    public void setOrderDate(Date orderDate) {
+	        this.orderDate = orderDate;
+	    }
 }

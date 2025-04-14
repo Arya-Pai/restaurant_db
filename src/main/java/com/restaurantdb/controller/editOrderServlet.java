@@ -1,67 +1,60 @@
 package com.restaurantdb.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import com.restaurantdb.dao.OrderItemsDAO;
+import com.restaurantdb.model.OrderItem;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-import com.restaurantdb.model.OrderItem;
-import com.restaurantdb.dao.OrderDAO;
-import com.restaurantdb.dao.OrderItemsDAO;
+import java.io.IOException;
+import java.sql.SQLException;
 
-@WebServlet("/EditOrderServlet")
+@WebServlet("/editOrderServlet")
 public class editOrderServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private OrderDAO orderDAO;
-    private OrderItemsDAO orderItemsDAO;
-
-    public void init() {
-        orderDAO = new OrderDAO();
-        orderItemsDAO = new OrderItemsDAO();
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Integer orderId = Integer.parseInt(request.getParameter("order_id"));
-        Integer tableId = Integer.parseInt(request.getParameter("table_id"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        int orderId = Integer.parseInt(request.getParameter("order_id"));
+        int tableId = Integer.parseInt(request.getParameter("table_id"));
 
         try {
-            if (action.startsWith("remove_")) {
-                int itemId = Integer.parseInt(action.split("_")[1]);
-                orderItemsDAO.deleteOrderItem(orderId, itemId);
-            } else if ("update".equals(action)) {
+            OrderItemsDAO orderItemsDAO = new OrderItemsDAO();
+
+            if ("update".equals(action)) {
                 String[] itemIds = request.getParameterValues("item_ids");
                 String[] quantities = request.getParameterValues("quantities");
+                String[] prices = request.getParameterValues("prices");
 
                 for (int i = 0; i < itemIds.length; i++) {
                     int itemId = Integer.parseInt(itemIds[i]);
                     int quantity = Integer.parseInt(quantities[i]);
-                    orderItemsDAO.updateOrderItem(new OrderItem(orderId, itemId, quantity));
+                    double price = Double.parseDouble(prices[i]);
+
+                    orderItemsDAO.updateOrderItem(orderId, itemId, quantity, price);
                 }
+            } else if (action.startsWith("remove_")) {
+                int itemId = Integer.parseInt(action.split("_")[1]);
+                orderItemsDAO.removeOrderItem(orderId, itemId);
             } else if ("add".equals(action)) {
                 int itemId = Integer.parseInt(request.getParameter("item_id"));
-                String itemName = request.getParameter("item_name");
-                double price = Double.parseDouble(request.getParameter("price"));
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-                orderItemsDAO.addOrderItem(new OrderItem(orderId, itemId, itemName, price, quantity));
+                OrderItem existingItem = orderItemsDAO.getOrderItem(orderId, itemId);
+                if (existingItem != null) {
+                    int newQuantity = existingItem.getQuantity() + quantity;
+                    orderItemsDAO.updateOrderItem(orderId, itemId, newQuantity, existingItem.getPrice());
+                } else {
+                    double price = orderItemsDAO.getItemPrice(itemId);
+                    orderItemsDAO.addOrderItem(orderId, itemId, quantity, price);
+                }
             }
 
-            List<OrderItem> updatedOrderList = orderItemsDAO.getAllOrderItems(orderId);
-            session.setAttribute("orderList", updatedOrderList);
+            response.sendRedirect("editOrder.jsp?tableId=" + tableId + "&orderId=" + orderId);
         } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException(e);
+            e.printStackTrace();
+            response.sendRedirect("editOrder.jsp?tableId=" + tableId + "&orderId=" + orderId + "&errorMessage=" + e.getMessage());
         }
-
-        response.sendRedirect("editOrder.jsp");
     }
 }

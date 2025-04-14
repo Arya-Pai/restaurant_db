@@ -31,6 +31,9 @@ public class Menu {
 		this.type=type;
 		
 	}
+	public Menu() {
+		// TODO Auto-generated constructor stub
+	}
 	public int getItem_Id() {
 		return item_id;
 	}
@@ -81,4 +84,12 @@ public class Menu {
 	public String getType() {
 		return type;
 	}
+	public boolean isAvailable() {
+		if(status=="Available") {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 }

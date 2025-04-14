@@ -70,7 +70,7 @@ public class BillServlet extends HttpServlet {
         bill.setTotalAmount(totalAmount);
         bill.setBillStatus(billStatus);
 
-        billDAO.addBill(bill);
+        BillDAO.addBill(bill);
         response.sendRedirect("BillServlet");
     }
 
