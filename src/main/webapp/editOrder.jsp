@@ -57,170 +57,16 @@ if (empname == null || role == null) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Order</title>
+     <link rel="stylesheet" href="css/navbar.css">
+     <link rel="stylesheet" href="css/editOrder.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar {
-            background-color: #333;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .navbar .nav-items {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-items a {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .nav-items a:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .container {
-            padding: 40px;
-            max-width: 1000px;
-            margin: 40px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 40px;
-            font-size: 28px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        ul.list-group {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        ul.list-group li {
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        ul.list-group li:hover {
-            background-color: #f1f1f1;
-            transform: scale(1.02);
-        }
-
-        .list-group-item a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
         
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-            font-size: 16px;
-        }
-        
-        th {
-            background-color: #007bff;
-            color: #fff;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        button, input[type="submit"] {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        button:hover, input[type="submit"]:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        label {
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        input[type="number"], select {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        .btn-success {
-            background-color: #007bff;
-        }
-
-        .btn-success:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <h1><%= role %> Dashboard</h1>
+        <h1><a href="index.jsp"><%= role %> Dashboard</a></h1>
         <div class="nav-items">
             <% if ("Waiter".equals(role)) { %>
                 <a href="table.jsp">Take Order</a>
@@ -231,7 +77,7 @@ if (empname == null || role == null) {
                 <a href="total_sales.jsp">Total Sales</a>
                 <a href="add_employee.jsp">Add Employee</a>
                 <a href="add_menu.jsp">Add Menu Item</a>
-                <a href="add_table.jsp">Add Table</a>
+             
                <a href="LogoutServlet">Logout</a>
             <% } else if ("Manager".equals(role)) { %>
                 <a href="total_sales.jsp">Total Sales</a>

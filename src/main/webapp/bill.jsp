@@ -71,7 +71,7 @@ if (empname == null || role == null) {
 </head>
 <body>
    <div class="navbar">
-        <h1><%= role %> Dashboard</h1>
+         <h1><a href="index.jsp"><%= role %> Dashboard</a></h1>
         <div class="nav-items">
             <% if ("Waiter".equals(role)) { %>
                 <a href="table.jsp">Take Order</a>
@@ -82,7 +82,7 @@ if (empname == null || role == null) {
                 <a href="total_sales.jsp">Total Sales</a>
                 <a href="add_employee.jsp">Add Employee</a>
                 <a href="add_menu.jsp">Add Menu Item</a>
-                <a href="add_table.jsp">Add Table</a>
+              
                 <a href="LogoutServlet">Logout</a>
             <% } else if ("Manager".equals(role)) { %>
                 <a href="total_sales.jsp">Total Sales</a>

@@ -54,111 +54,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+     <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/style.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
 
-        .navbar {
-            background-color: #333;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-        }
-
-        .navbar h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #fff;
-             text-decoration: none;
-        }
-        .navbar h1 a{
-            
-            color: #fff;
-             text-decoration: none;
-        }
-        
-
-        .navbar .nav-items {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-items a {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .nav-items a:hover {
-            background-color: #0056b3;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .alert {
-            color: red;
-            margin-bottom: 20px;
-        }
-        
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        th {
-            background-color: #007bff;
-            color: #fff;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        .text-center {
-            text-align: center;
-            font-size: 18px;
-            color: #666;
-        }
+     
     </style>
 </head>
 <body>
@@ -174,7 +74,7 @@
                 <a href="total_sales.jsp">Total Sales</a>
                 <a href="add_employee.jsp">Add Employee</a>
                 <a href="add_menu.jsp">Add Menu Item</a>
-             <!--    <a href="add_table.jsp">Add Table</a> -->
+           
                 <a href="LogoutServlet">Logout</a>
             <% } else if ("Manager".equals(role)) { %>
                 <a href="total_sales.jsp">Total Sales</a>

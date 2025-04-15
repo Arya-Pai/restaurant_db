@@ -32,103 +32,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total Sales</title>
+	<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="css/sales.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar {
-            background-color: #333;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar h1{
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-             /* background-color: #007bff; */
-            color: #fff;
-             text-decoration: none;
-        }
-
-        .navbar .nav-items {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-items a {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .nav-items a:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .container {
-            padding: 40px;
-            max-width: 1000px;
-            margin: 40px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 40px;
-            font-size: 28px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
         
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-            font-size: 16px;
-        }
-        
-        th {
-            background-color: #007bff;
-            color: #fff;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .total-amount {
-            text-align: right;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -144,7 +51,7 @@
                 <a href="total_sales.jsp">Total Sales</a>
                 <a href="add_employee.jsp">Add Employee</a>
                 <a href="add_menu.jsp">Add Menu Item</a>
-                <a href="add_table.jsp">Add Table</a>
+            
                 <a href="LogoutServlet">Logout</a>
             <% } else if ("Manager".equals(role)) { %>
                 <a href="total_sales.jsp">Total Sales</a>
