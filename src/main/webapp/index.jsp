@@ -2,6 +2,8 @@
 <%@page import="java.util.*" %>
 <%@ page import="com.restaurantdb.model.Bill,com.restaurantdb.dao.BillDAO" %>
 <%@ page import="com.restaurantdb.model.OrderItem,com.restaurantdb.dao.OrderItemsDAO" %>
+<%@ page import="com.restaurantdb.dao.SalesDAO" %>
+<%@ page import="com.restaurantdb.model.Sale" %>
 <%
     // Get employee name and role from session
     String empname = (String) session.getAttribute("emp_name");
@@ -27,6 +29,21 @@
     try {
         OrderItemsDAO orderItemsDAO = new OrderItemsDAO();
         pendingOrderItems = orderItemsDAO.getPendingOrderItems();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    
+    
+    List<Sale> todaysSales = null;
+    double totalAmount = 0;
+    try {
+        SalesDAO salesDAO = new SalesDAO();
+        todaysSales = salesDAO.getTodaySales();
+        if (todaysSales != null) {
+            for (Sale sale : todaysSales) {
+                totalAmount += sale.getAmount();
+            }
+        }
     } catch (Exception e) {
         e.printStackTrace();
     }
@@ -57,7 +74,15 @@
         .navbar h1 {
             margin: 0;
             font-size: 24px;
+            color: #fff;
+             text-decoration: none;
         }
+        .navbar h1 a{
+            
+            color: #fff;
+             text-decoration: none;
+        }
+        
 
         .navbar .nav-items {
             display: flex;
@@ -138,7 +163,7 @@
 </head>
 <body>
     <div class="navbar">
-        <h1><%= role %> Dashboard</h1>
+        <h1><a href="index.jsp" > <%= role %> Dashboard </a></h1>
         <div class="nav-items">
             <% if ("Waiter".equals(role)) { %>
                 <a href="table.jsp">Take Order</a>
@@ -149,7 +174,7 @@
                 <a href="total_sales.jsp">Total Sales</a>
                 <a href="add_employee.jsp">Add Employee</a>
                 <a href="add_menu.jsp">Add Menu Item</a>
-                <a href="add_table.jsp">Add Table</a>
+             <!--    <a href="add_table.jsp">Add Table</a> -->
                 <a href="LogoutServlet">Logout</a>
             <% } else if ("Manager".equals(role)) { %>
                 <a href="total_sales.jsp">Total Sales</a>
@@ -256,6 +281,51 @@
             <p class="text-center">No pending order items available.</p>
         <% } %>
     </div>
+    <%} %>
+    
+    
+    <%if("admin".equals(role)){%>
+    <div class="container">
+        <h2>Today's Sales</h2>
+        <table>
+            <thead>
+                <tr>
+                	<th>Payment ID</th>
+                	<th>Bill ID</th>
+                    <th>Order ID</th>
+                    <th>Table Number</th>
+                    <th>Employee Name</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (todaysSales != null && !todaysSales.isEmpty()) {
+                    for (Sale sale : todaysSales) { %>
+                    <tr>
+                        <td><%= sale.getPaymentId() %></td>
+                        <td><%= sale.getBillId() %></td>
+                        <td><%= sale.getOrderId() %></td>
+                        <td><%= sale.getTableNumber() %></td>
+     
+                        <td><%= sale.getEmployeeName() %></td>
+                        <td>₹<%= sale.getAmount() %></td>
+                        <td><%= sale.getPaymentMode() %></td>
+                    </tr>
+                <% }
+                } else { %>
+                    <tr>
+                        <td colspan="8" class="text-center">No sales found for today.</td>
+                    </tr>
+                <% } %>
+                <tr class="total">
+                    <td colspan="6" class="text-right">Total Amount:</td>
+                    <td colspan="2">₹<%= totalAmount %></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
     <%} %>
 </body>
 </html>

@@ -43,7 +43,7 @@ public class SalesDAO {
                 o.order_id,
                 e.name AS employee_name,
                 o.bill_id,
-                o.total_amount,
+                p.amount,
                 p.payment_time,
                 p.payment_mode,
         ROW_NUMBER() OVER (PARTITION BY p.payment_id ORDER BY p.payment_time DESC) AS rn_payment,
@@ -58,13 +58,15 @@ public class SalesDAO {
                 employees e ON o.employee_id = e.employee_id
             WHERE 
                 p.payment_status = 'completed'
+                AND p.amount>0
         )
         SELECT 
-            payment_id, order_id, employee_name, bill_id, total_amount, payment_time, payment_mode
+            payment_id, order_id, employee_name, bill_id, amount, payment_time, payment_mode
         FROM 
             RankedPayments
         WHERE 
     rn_payment = 1 AND rn_bill = 1
+   
         ORDER BY 
             payment_time DESC;
             
@@ -79,7 +81,7 @@ public class SalesDAO {
                 sale.setPaymentMode(rs.getString("payment_mode"));
                 sale.setEmployeeName(rs.getString("employee_name"));
                 sale.setBillId(rs.getInt("bill_id"));
-                sale.setAmount(rs.getDouble("total_amount"));
+                sale.setAmount(rs.getDouble("amount"));
                 sale.setPaymentTime(rs.getTimestamp("payment_time"));
                 totalSales.add(sale);
             }

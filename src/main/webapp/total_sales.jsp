@@ -50,10 +50,13 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar h1 {
+        .navbar h1{
             margin: 0;
             font-size: 24px;
             font-weight: bold;
+             /* background-color: #007bff; */
+            color: #fff;
+             text-decoration: none;
         }
 
         .navbar .nav-items {
@@ -130,7 +133,7 @@
 </head>
 <body>
     <div class="navbar">
-        <h1><%= role %> Dashboard</h1>
+        <h1><a href="index.jsp"><%= role %> Dashboard</a></h1>
         <div class="nav-items">
             <% if ("Waiter".equals(role)) { %>
                 <a href="table.jsp">Take Order</a>

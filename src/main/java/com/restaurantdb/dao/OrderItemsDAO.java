@@ -163,7 +163,7 @@ public class OrderItemsDAO {
     
 
     public void addOrderItem(int orderId, int itemId, int quantity, double price) throws SQLException, ClassNotFoundException {
-        String query = "INSERT INTO orders_items (order_id, item_id, quantity, price) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO orders_items (order_id, item_id, quantity, price,status) VALUES (?, ?, ?, ?, 'Pending')";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement pst = con.prepareStatement(query)) {
             pst.setInt(1, orderId);

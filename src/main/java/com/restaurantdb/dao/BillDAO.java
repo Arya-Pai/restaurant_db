@@ -8,13 +8,13 @@ import com.restaurantdb.model.Bill;
 import com.restaurantdb.util.DBUtil;
 
 public class BillDAO {
-    public static void addBill(int table_id) throws SQLException, ClassNotFoundException {
+    public static void addBill(Bill bill2) throws SQLException, ClassNotFoundException {
         String query = "INSERT INTO BILLS (bill_id,table_id, bill_status) VALUES (?,?, ?)";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement pst = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
         	int bill_id=generateBillID();
         	pst.setInt(1, bill_id);
-            pst.setInt(2, table_id);
+            pst.setInt(2, bill2);
     
             pst.setString(3, "Pending");
             pst.executeUpdate();
